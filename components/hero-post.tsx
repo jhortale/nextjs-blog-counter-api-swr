@@ -1,17 +1,19 @@
-import Avatar from './avatar'
-import DateFormatter from './date-formatter'
-import CoverImage from './cover-image'
-import Link from 'next/link'
-import Author from '../types/author'
+import Avatar from "./avatar";
+import DateFormatter from "./date-formatter";
+import CoverImage from "./cover-image";
+import Link from "next/link";
+import Author from "../types/author";
+import { useFetch } from "@/lib/fetcher";
+import PostViews from "./post-views";
 
 type Props = {
-  title: string
-  coverImage: string
-  date: string
-  excerpt: string
-  author: Author
-  slug: string
-}
+  title: string;
+  coverImage: string;
+  date: string;
+  excerpt: string;
+  author: Author;
+  slug: string;
+};
 
 const HeroPost = ({
   title,
@@ -21,6 +23,11 @@ const HeroPost = ({
   author,
   slug,
 }: Props) => {
+  
+	const { data } = useFetch(`/api/page-views-preview?id=${slug}`, true);
+
+  const views = data?.total;
+
   return (
     <section>
       <div className="mb-8 md:mb-16">
@@ -34,7 +41,8 @@ const HeroPost = ({
             </Link>
           </h3>
           <div className="mb-4 md:mb-0 text-lg">
-            <DateFormatter dateString={date} />
+            <DateFormatter dateString={date} /> -{" "}
+            <PostViews>{`${views >= 0 ? views : "..."} views`}</PostViews>
           </div>
         </div>
         <div>
@@ -43,7 +51,7 @@ const HeroPost = ({
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default HeroPost
+export default HeroPost;
